@@ -16,11 +16,14 @@ import {
   Text
 } from "native-base";
 
+// Store
+import coffeeStore from "../../Store/CoffeeStore";
+import cartStore from "../../Store/CartStore";
+
 // Style
 import styles from "./styles";
 
 //List
-import coffeeshops from "../CoffeeList/list";
 import CartButton from "../Buttons/CartButton";
 
 class CoffeeDetail extends Component {
@@ -40,11 +43,17 @@ class CoffeeDetail extends Component {
       option: value
     });
 
+  submitItems = () => cartStore.addItemToCart(this.state);
+
   render() {
+    if (coffeeStore.loading) {
+      <Loading />;
+    }
     const coffeeshopID = this.props.navigation.getParam("coffeeshopID");
-    const coffeeshop = coffeeshops.find(
+    const coffeeshop = coffeeStore.coffeeshops.find(
       coffeeshop => coffeeshopID === coffeeshop.id
     );
+
     return (
       <Container>
         <Content>
@@ -58,7 +67,7 @@ class CoffeeDetail extends Component {
               </Left>
               <Body />
               <Right>
-                <Thumbnail bordered source={coffeeshop.img} />
+                <Thumbnail bordered source={{ uri: coffeeshop.img }} />
               </Right>
             </CardItem>
             <CardItem>
@@ -99,7 +108,11 @@ class CoffeeDetail extends Component {
               </Body>
 
               <Right>
-                <Button full style={styles.addButton}>
+                <Button
+                  full
+                  style={styles.addButton}
+                  onPress={this.submitItems}
+                >
                   <Text>Add</Text>
                 </Button>
               </Right>

@@ -1,19 +1,24 @@
 import React from "react";
 
 // NativeBase Components
-import { List, Content } from "native-base";
+import { List, Content, Spinner } from "native-base";
 
 // Store
-import coffeeshops from "./list";
+import coffeeStore from "../../Store/CoffeeStore";
 
 // Component
 import CoffeeItem from "./CoffeeItem";
 import CartButton from "../Buttons/CartButton";
+import Loading from "../Loading";
 
 const CoffeeList = () => {
-  const coffeeshopList = coffeeshops.map(coffeeshop => (
+  if (coffeeStore.loading) {
+    <Loading />;
+  }
+  const coffeeshopList = coffeeStore.coffeeshops.map(coffeeshop => (
     <CoffeeItem coffeeshop={coffeeshop} key={coffeeshop.id} />
   ));
+
   return (
     <Content>
       <List>{coffeeshopList}</List>
